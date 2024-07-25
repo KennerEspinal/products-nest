@@ -27,3 +27,9 @@ docker compose up -d
 ```
 yarn start:dev
 ```
+
+7. Llenar la Base de Datos con la semilla
+
+```
+http:localhost:3000/api/seed
+```
