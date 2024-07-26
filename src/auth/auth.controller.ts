@@ -1,10 +1,19 @@
-import { Controller, Post, Body, Get, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Req,
+  SetMetadata,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDTO, LoginUserDTO } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './entities/user.entity';
 import { Request } from 'express';
-import { GetUser, RawHeader } from './decorators';
+import { Auth, GetUser, RawHeader } from './decorators';
+import { UserRoleGuard } from './guards/user-role.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -34,6 +43,25 @@ export class AuthController {
       user,
       userEmail,
       rawHeaders,
+    };
+  }
+
+  @Get('private-role')
+  @UseGuards(AuthGuard(), UserRoleGuard)
+  @SetMetadata('roles', ['admin'])
+  privateRole(@GetUser() user: User) {
+    return {
+      message: 'This is a public route',
+      user,
+    };
+  }
+
+  @Get('private-role-2')
+  @Auth()
+  privateRole3(@GetUser() user: User) {
+    return {
+      message: 'This is a public route',
+      user,
     };
   }
 }
