@@ -50,6 +50,12 @@ export class AuthService {
     return { ...user, ...this.JwtToken({ id: user.id }) };
   }
 
+  async checkAuthStatus(user: User) {
+    delete user.roles;
+    delete user.password;
+    return { ...user, ...this.JwtToken({ id: user.id }) };
+  }
+
   private JwtToken(payload: JwtPayload) {
     const token = this.jwtService.sign(payload);
     return {
